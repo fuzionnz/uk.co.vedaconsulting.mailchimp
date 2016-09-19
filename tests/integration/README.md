@@ -1,5 +1,4 @@
-PHP Unit Integration Tests
-==========================
+# PHPUnit Integration Tests
 
 These tests can be run with drush. They rely on the actual CiviCRM installation
 and a live Mailchimp account, so it's important that this is a safe thing to do!
@@ -27,7 +26,17 @@ Run the simplest connection test. A dot means a successful test pass.
 
     OK (1 test, 3 assertions)
 
-
 Run all integration tests:
 
     $ phpunit.phar civicrm_extensions_dir/uk.co.vedaconsulting.mailchimp/tests/integration/
+
+## Troubleshooting
+
+**All the tests failed! 300 errors?!**
+
+May indicate that your CiviCRM DB does not have the Mailchimp extension
+installed, especially if you see *"Expected to find the Custom Field with name
+Mailchimp_Group"* and similar exceptions. Make sure the extension is installed
+(which will add some custom fields for Group entities), that you've configured
+the API key in Mailchimp settings, that a Group is configured to connect to a
+list, etc.

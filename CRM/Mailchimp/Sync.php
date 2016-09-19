@@ -455,7 +455,7 @@ class CRM_Mailchimp_Sync {
    * @return int
    */
   public function removeInSync($mode) {
-
+    Civi::log()->info(__FUNCTION__);
     // In push mode, delete duplicate CiviCRM contacts.
     $doubles = 0;
     if ($mode == 'push') {
