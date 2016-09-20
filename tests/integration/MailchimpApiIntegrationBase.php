@@ -290,6 +290,7 @@ class MailchimpApiIntegrationBase extends \PHPUnit_Framework_TestCase {
     $url_parts = parse_url(CIVICRM_UF_BASEURL);
     $contact['email'] = strtolower($contact['first_name'] . '.' . $contact['last_name']) . '@' . $url_parts['host'];
     $contact['subscriber_hash'] = md5(strtolower($contact['email']));
+
     $result = civicrm_api3('Contact', 'get', [
       'sequential' => 1,
       'first_name' => $contact['first_name'],
