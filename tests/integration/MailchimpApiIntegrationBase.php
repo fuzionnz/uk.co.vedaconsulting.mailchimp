@@ -399,11 +399,12 @@ class MailchimpApiIntegrationBase extends \PHPUnit_Framework_TestCase {
 
     static::tearDownCiviCrmFixtureContacts();
 
-    // Delete test group(s)
+    // Delete test group(s), provided they exist.
     if (static::$civicrm_group_id_membership) {
-      //print "deleting test list ".static::$civicrm_group_id_membership ."\n";
-      // Ensure this group is set to be the membership group.
-      $result = civicrm_api3('Group', 'delete', ['id' => static::$civicrm_group_id_membership]);
+      $params = ['id' => static::$civicrm_group_id_membership];
+      if ($result = civicrm_api('Group', 'get', $params) && !empty($result['values'])) {
+        $result = civicrm_api3('Group', 'delete', $params);
+      }
     }
   }
   /**
@@ -572,6 +573,7 @@ class MailchimpApiIntegrationBase extends \PHPUnit_Framework_TestCase {
     }
     return $result;
   }
+
   /**
    * Sugar function for adjusting fixture: uses CiviCRM API to delete all
    * GroupContact records between the contact and the group specified.

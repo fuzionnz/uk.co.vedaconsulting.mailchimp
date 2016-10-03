@@ -1119,7 +1119,6 @@ class MailchimpApiIntegrationTest extends MailchimpApiIntegrationBase {
     }
   }
 
-
   /**
    * Check interests are properly mapped as groups are changed and that
    * collectMailchimp and collectCiviCrm work as expected.
