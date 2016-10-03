@@ -580,7 +580,7 @@ class MailchimpApiIntegrationBase extends \PHPUnit_Framework_TestCase {
    * @param int   $group_id Set to
    *              static::$civicrm_group_id_interest_{1,2}
    */
-  public function deleteGroup($contact, $group_id, $disable_post_hooks=FALSE) {
+  public function deleteGroupContact($contact, $group_id, $disable_post_hooks=FALSE) {
     if ($disable_post_hooks) {
       $original_state = CRM_Mailchimp_Utils::$post_hook_enabled;
       CRM_Mailchimp_Utils::$post_hook_enabled = FALSE;

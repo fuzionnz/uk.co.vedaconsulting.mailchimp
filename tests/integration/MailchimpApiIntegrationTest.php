@@ -91,7 +91,7 @@ class MailchimpApiIntegrationTest extends MailchimpApiIntegrationBase {
     return;
     foreach ($contacts as $contact) {
       foreach ([static::$civicrm_group_id_membership, static::$civicrm_group_id_interest_1, static::$civicrm_group_id_interest_2] as $group_id) {
-        $this->deleteGroup($contact, $group_id, TRUE);
+        $this->deleteGroupContact($contact, $group_id, TRUE);
         // Ensure name is as it should be as some tests change this.
         civicrm_api3('Contact', 'create', [
           'contact_id' => $contact['contact_id'],
