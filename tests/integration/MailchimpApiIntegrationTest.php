@@ -61,7 +61,6 @@ class MailchimpApiIntegrationTest extends CRM_Mailchimp_IntegrationTestBase {
    * Mailchimp test list is empty.
    */
   public function tearDown() {
-
     // Delete all GroupContact records on our test contacts to test groups.
     $api = CRM_Mailchimp_Utils::getMailchimpApi();
     $contacts = array_filter([static::$civicrm_contact_1, static::$civicrm_contact_2],
@@ -91,7 +90,7 @@ class MailchimpApiIntegrationTest extends CRM_Mailchimp_IntegrationTestBase {
     return;
     foreach ($contacts as $contact) {
       foreach ([static::$civicrm_group_id_membership, static::$civicrm_group_id_interest_1, static::$civicrm_group_id_interest_2] as $group_id) {
-        $this->deleteGroup($contact, $group_id, TRUE);
+        $this->deleteGroupContact($contact, $group_id, TRUE);
         // Ensure name is as it should be as some tests change this.
         civicrm_api3('Contact', 'create', [
           'contact_id' => $contact['contact_id'],
@@ -1119,7 +1118,6 @@ class MailchimpApiIntegrationTest extends CRM_Mailchimp_IntegrationTestBase {
     }
   }
 
-
   /**
    * Check interests are properly mapped as groups are changed and that
    * collectMailchimp and collectCiviCrm work as expected.
@@ -1223,6 +1221,50 @@ class MailchimpApiIntegrationTest extends CRM_Mailchimp_IntegrationTestBase {
     }
   }
 
+  /**
+   * Test syncing of smart groups.
+   *
+   * @group SmartGroup
+   */
+  public function testSmartGroupSync() {
+    // Use Contact,get API to ensure the contact appears in the group. This
+    // Smart Group will match test contact 1's by email. It feels a bit indirect
+    // to have the group set up outside this test ... I'm open to changing it,
+    // was just following the existing pattern where the groups are set up in
+    // fixtures.
+    //
+    // @see MailchimpApiIntegrationBase::createCiviCRMSmartGroupFixture()
+    //
+    // We don't use GroupContact,get because it does not show Smart Group
+    // membership results.
+    $contacts = civicrm_api3('Contact', 'get', [
+      'is_deleted' => 0,
+      'is_opt_out' => 0,
+      'do_not_email' => 0,
+      'on_hold' => 0,
+      'is_deceased' => 0,
+      'contact_id' => static::$civicrm_contact_1['contact_id'],
+      'return' => ['first_name', 'last_name', 'group'],
+      'options' => ['limit' => 0],
+    ]);
+    $this->assertInternalType('int', $contacts['count']);
+    $this->assertEquals(0, $contacts['is_error']);
+
+    // Ensure the retrieved contact has a group membership for the Smart Group.
+    foreach ($contacts['values'] as $contact) {
+      $contact_group_ids = explode(',', $contacts['values'][static::$civicrm_contact_1['contact_id']]['groups']);
+      $this->assertContains($group->id, $contact_group_ids);
+    }
+
+    // Test that groupcontact get shows contacts might be nice here, if the
+    // API supports that in future.
+
+    // Smart group needs to be configurated to have Mailchimp association.
+
+    // Call a push sync for that smart group. As per existing test?
+
+    // Check the result. As per existing test?
+  }
 
   /**
    * Test CiviCRM API function to get mailchimp lists.
